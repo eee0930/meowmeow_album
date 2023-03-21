@@ -8,6 +8,7 @@ const imageModal = document.querySelector("#imageModal");
 const loadingModal = document.querySelector("#loadingModal"); 
 const LOCALROOT = "localRootItem";
 const LOCALCHILD = "localChildItem";
+const ROOT = "root";
 
 let categories = [];
 
@@ -15,6 +16,17 @@ let categories = [];
 function removeAllEle(ele) {
     while (ele.firstChild) {
         ele.removeChild(ele.firstChild);
+    }
+};
+
+function movePrevDir(ele) {
+    setCategories(false, ele);
+    const nodeId = ele.id;
+    const name = ele.name;
+    if(name === ROOT) {
+        getRootDirs();
+    } else {
+        getDirOrFilesById(nodeId, name);
     }
 };
 
@@ -31,7 +43,7 @@ function setCategories(isAdd, ele) {
     } else {
         let cateIndex = 0;
         for(let i = 0; i < categories.length; i++) {
-            if(cate.id === eleId) {
+            if(categories[i].id === eleId) {
                 cateIndex = i;
                 break;
             }
@@ -40,14 +52,9 @@ function setCategories(isAdd, ele) {
     }
     categories.map((cate, i) => {
         const cateDiv = document.createElement("div");
-        const nodeId = cate.id;
         const name = cate.name;
         cateDiv.innerText = name;
-        if(i === 0) {
-            cateDiv.addEventListener("click", getRootDirs);
-        } else {
-            cateDiv.addEventListener("click", () => getDirOrFilesById(nodeId, name));
-        }
+        cateDiv.addEventListener("click", () => movePrevDir(ele));
         breadcrumb.appendChild(cateDiv);
     })
 }
@@ -90,11 +97,11 @@ function markupPrevBtn(parentId, parentName) {
     const prev = prevBtn.cloneNode(true);
     prev.classList.remove("prevBtn");
     prev.style.display = "block";
-    if(parentId === null) {
-        prev.addEventListener("click", getRootDirs);
-    } else {
-        prev.addEventListener("click", () => getDirOrFilesById(parentId, parentName));
-    }
+    const ele = {
+        id: parentId,
+        name: parentName,
+    };
+    prev.addEventListener("click", () => movePrevDir(ele));
     nodes.appendChild(prev);
 }
 // markup file or dir
@@ -120,10 +127,10 @@ function markupFileOrDir(data) {
 async function getRootDirs() {
     removeAllEle(nodes);
     isLoading(true);
-    app.dataset.id = 'root';
+    app.dataset.id = ROOT;
     const ele = {
         id: null,
-        name: "root",
+        name: ROOT,
     };
     setCategories(true, ele);
     let localRoot = localStorage.getItem(LOCALROOT);
@@ -135,8 +142,8 @@ async function getRootDirs() {
         localStorage.setItem(LOCALROOT, JSON.stringify(rootDatas));
     }
     
-    rootDatas.map((data) => {
-        markupFileOrDir(data);
+    rootDatas.map((rootData) => {
+        markupFileOrDir(rootData);
     });
     isLoading(false);
 }
@@ -152,32 +159,32 @@ async function getDirOrFilesById(nodeId, nodeName) {
     };
     setCategories(true, ele);
     let localChild = localStorage.getItem(LOCALCHILD);
-    let childDatas = [];
+    let dirDatas = [];
     let parcedLocalChild = {};
     if(localChild) {
         parcedLocalChild = JSON.parse(localChild);
         if(parcedLocalChild[nodeId] !== undefined) {
-            childDatas = parcedLocalChild[nodeId];
+            dirDatas = parcedLocalChild[nodeId];
         } else {
-            childDatas = await fetchDirOrFilesById(nodeId);
-            parcedLocalChild[nodeId] = childDatas;
+            dirDatas = await fetchDirOrFilesById(nodeId);
+            parcedLocalChild[nodeId] = dirDatas;
             localStorage.setItem(LOCALCHILD, JSON.stringify(parcedLocalChild));
         }
     } else {
-        childDatas = await fetchDirOrFilesById(nodeId);
-        parcedLocalChild[nodeId] = childDatas;
+        dirDatas = await fetchDirOrFilesById(nodeId);
+        parcedLocalChild[nodeId] = dirDatas;
         localStorage.setItem(LOCALCHILD, JSON.stringify(parcedLocalChild));
     }
     const parentId = categories[categories.length - 2].id;
     const parentName = categories[categories.length - 2].name; 
     markupPrevBtn(parentId, parentName);
-    childDatas.map((data) => {
-        markupFileOrDir(data);
+    dirDatas.map((dirData) => {
+        markupFileOrDir(dirData);
     });
     isLoading(false);
 }
 
 
-if(app.dataset.id === 'root') {
+if(app.dataset.id === ROOT) {
     getRootDirs();
 }
