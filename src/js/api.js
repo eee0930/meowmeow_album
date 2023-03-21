@@ -8,6 +8,7 @@ async function fetchRootDirs() {
         const data = await response.json();
         return data;
     } catch(error) {
+        isLoading(false);
         console.log(response.status, 'Unable to get the currency rate');
     }
 }
@@ -19,6 +20,7 @@ async function fetchDirOrFilesById(nodeId) {
         const data = await response.json();
         return data;
     } catch(error) {
+        isLoading(false);
         console.log(response.status, 'Unable to get the currency rate');
     }
 }

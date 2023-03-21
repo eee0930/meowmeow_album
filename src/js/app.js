@@ -6,8 +6,8 @@ const dirEle = document.querySelector(".dirEle");
 const fileEle = document.querySelector(".fileEle");
 const imageModal = document.querySelector("#imageModal");
 const loadingModal = document.querySelector("#loadingModal"); 
-const LOCALROOT = "localRootItem";
-const LOCALCHILD = "localChildItem";
+const LOCALROOT = "localRootItems";
+const LOCALDIR = "localDirItems";
 const ROOT = "root";
 
 let categories = [];
@@ -158,22 +158,22 @@ async function getDirOrFilesById(nodeId, nodeName) {
         name: nodeName,
     };
     setCategories(true, ele);
-    let localChild = localStorage.getItem(LOCALCHILD);
+    let localDir = localStorage.getItem(LOCALDIR);
     let dirDatas = [];
-    let parcedLocalChild = {};
-    if(localChild) {
-        parcedLocalChild = JSON.parse(localChild);
-        if(parcedLocalChild[nodeId] !== undefined) {
-            dirDatas = parcedLocalChild[nodeId];
+    let parcedLocalDir = {};
+    if(localDir) {
+        parcedLocalDir = JSON.parse(localDir);
+        if(parcedLocalDir[nodeId] !== undefined) {
+            dirDatas = parcedLocalDir[nodeId];
         } else {
             dirDatas = await fetchDirOrFilesById(nodeId);
-            parcedLocalChild[nodeId] = dirDatas;
-            localStorage.setItem(LOCALCHILD, JSON.stringify(parcedLocalChild));
+            parcedLocalDir[nodeId] = dirDatas;
+            localStorage.setItem(LOCALDIR, JSON.stringify(parcedLocalDir));
         }
     } else {
         dirDatas = await fetchDirOrFilesById(nodeId);
-        parcedLocalChild[nodeId] = dirDatas;
-        localStorage.setItem(LOCALCHILD, JSON.stringify(parcedLocalChild));
+        parcedLocalDir[nodeId] = dirDatas;
+        localStorage.setItem(LOCALDIR, JSON.stringify(parcedLocalDir));
     }
     const parentId = categories[categories.length - 2].id;
     const parentName = categories[categories.length - 2].name; 
