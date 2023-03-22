@@ -12,30 +12,44 @@ const LOCALDIR = "localDirItems";
 const ROOT = "root";
 const BLOCK = "block";
 const NONE = "none";
+const LOADING = "Loading";
+const IMG_VIEWER = "ImageViewer";
 const ACTION = "jsAction";
 
 let nowNode = {};
 let categories = [];
 
 /**
- * ele의 child 요소들 비우기
+ * 현재 dir의 node setting 
+ * @param {*} id 
+ * @param {*} name 
+ */
+function setNowNode(id, name) {
+    nowNode = {
+        id,
+        name,
+    };
+}
+
+/**
+ * ele의 children 요소들 비우기
  * @param {*} ele 
  */
-function removeAllEle(ele) {
+function removeChildrenByEle(ele) {
     while (ele.firstChild) {
         ele.removeChild(ele.firstChild);
     }
 };
 
 /**
- * error 화면 띄우기
+ * error 화면 setting
  */
 function handleError() {
     removeAllEle(nodes);
     const errorImg = document.createElement("img");
-    errorImg.src="assets/error_image.jpg";
+    errorImg.src = "assets/error_image.jpg";
     errorImg.className = `error ${ACTION}`;
-    errorImg.addEventListener("click", resetRoot);
+    errorImg.addEventListener("click", setRoot);
     nodes.appendChild(errorImg);
 }
 
@@ -48,10 +62,7 @@ function handleClickCategory(index) {
     categories = categories.slice(0, index + 1);
     const nodeId = categories[index].id;
     const nodeName = categories[index].name;
-    nowNode = {
-        id: nodeId,
-        name: nodeName,
-    }
+    setNowNode(nodeId, nodeName);
     if(nodeId === -1) {
         getRootDirs();
     } else {
@@ -78,7 +89,7 @@ function markupCategories(category, index) {
  * @param {*} nodeId 
  */  
 function setCategories(nodeId) {
-    removeAllEle(breadcrumb);
+    removeChildrenByEle(breadcrumb);
     if(categories.length < 1) {
         categories.push(nowNode);
     } else {
@@ -95,6 +106,9 @@ function setCategories(nodeId) {
 }
 
 // [handle Modal] --------------------------------------------------------------
+const loadingImg = imageModal.querySelector("#loadingImg");
+const dataImg = imageModal.querySelector("#dataImg");
+
 /**
  * 로딩 모달 띄우기
  * @param {*} isLoading 
@@ -112,13 +126,11 @@ function isLoading(isLoading) {
  * @param {*} filePath 
  */
 function openImageViewer(filePath) {
-    const loadingImg = imageModal.querySelector("#loadingImg");
-    const dataImg = imageModal.querySelector("#dataImg");
     dataImg.src = fetchImageFile(filePath);
     imageModal.style.display = BLOCK;
     setTimeout(function() {
-        imageModal.classList.remove("Loading");
-        imageModal.classList.add("ImageViewer");
+        imageModal.classList.remove(LOADING);
+        imageModal.classList.add(IMG_VIEWER);
         loadingImg.style.display = NONE;
         dataImg.style.display = BLOCK;
     }, 500);
@@ -128,13 +140,11 @@ function openImageViewer(filePath) {
  * 모달창 닫기
  */
 function closeModal() {
-    const loadingImg = imageModal.querySelector("#loadingImg");
-    const dataImg = imageModal.querySelector("#dataImg");
     loadingImg.style.display = BLOCK;
     dataImg.style.display = NONE;
     imageModal.style.display = NONE;
-    imageModal.classList.remove("ImageViewer");
-    imageModal.classList.add("Loading");
+    imageModal.classList.remove(IMG_VIEWER);
+    imageModal.classList.add(LOADING);
 }
 
 // [handle Nodes] --------------------------------------------------------------
@@ -143,12 +153,10 @@ function closeModal() {
  */
 function handleClickPrevBtn() {
     categories.pop();
-    const nodeId = categories[categories.length - 1].id;
-    const nodeName = categories[categories.length - 1].name;
-    nowNode = {
-        id : nodeId,
-        name: nodeName,
-    };
+    const nodeCategory = categories[categories.length - 1];
+    const nodeId = nodeCategory.id;
+    const nodeName = nodeCategory.name;
+    setNowNode(nodeId, nodeName);
     if(nodeId === -1) {
         getRootDirs();
     } else {
@@ -170,17 +178,24 @@ function markupPrevBtn() {
 }
 
 /**
- * id, name에 해당하는 dir 클릭 이벤트
- * @param {*} id 
- * @param {*} name 
+ * root dir setting
  */
-function handleClickDir(id, name) {
-    nowNode = {
-        id,
-        name,
-    };
+function setRoot() {
+    const nodeId = -1;
+    setNowNode(nodeId, ROOT);
+    getRootDirs();
+    setCategories(nodeId);
+}
+
+/**
+ * nodeId, nodeName에 해당하는 dir setting
+ * @param {*} nodeId 
+ * @param {*} nodeName 
+ */
+function handleClickDir(nodeId, nodeName) {
+    setNowNode(nodeId, nodeName);
     getDirOrFilesById();
-    setCategories(id);
+    setCategories(nodeId);
 }
 
 /**
@@ -207,13 +222,13 @@ function markupFileOrDir(data) {
 }
 
 /**
- * get api fetch items by nodeId
+ * api fetch로 가져온 data들 setting하기
  * @param {*} nodeId 
  * @param {*} localData 
  * @returns fetchDatas
  */
-async function getFetchItems(nodeId, localData) {
-    let datas = '';
+async function setFetchItems(nodeId, localData) {
+    let datas = [];
     if(nodeId) {
         datas = await fetchDirOrFilesById(nodeId);
         localData[nodeId] = datas;
@@ -229,14 +244,14 @@ async function getFetchItems(nodeId, localData) {
  * root dir 가져오기
  */
 async function getRootDirs() {
-    removeAllEle(nodes);
+    removeChildrenByEle(nodes);
     isLoading(true);
     const localRoot = localStorage.getItem(LOCALROOT);
     let rootDatas = [];
     if(localRoot) {
         rootDatas = JSON.parse(localRoot);
     } else {
-        rootDatas = await getFetchItems();
+        rootDatas = await setFetchItems();
     }
     if(rootDatas !== false) {
         rootDatas.map((rootData) => {
@@ -250,7 +265,7 @@ async function getRootDirs() {
  * dir or files 가져오기
  */
 async function getDirOrFilesById() {
-    removeAllEle(nodes);
+    removeChildrenByEle(nodes);
     isLoading(true);
     const localDir = localStorage.getItem(LOCALDIR);
     let dirDatas = [];
@@ -259,12 +274,12 @@ async function getDirOrFilesById() {
         parcedLocalDir = JSON.parse(localDir);
         if(parcedLocalDir[nowNode.id] === undefined 
             || parcedLocalDir[nowNode.id] === false) {
-            dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
+            dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
         } else {
             dirDatas = parcedLocalDir[nowNode.id];
         }
     } else {
-        dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
+        dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
     }
     if(dirDatas !== false) {
         markupPrevBtn();
@@ -275,18 +290,6 @@ async function getDirOrFilesById() {
     isLoading(false);
 }
 
-/**
- * 화면 진입 시 setting
- */
-function resetRoot() {
-    nowNode = {
-        id: -1,
-        name: ROOT,
-    };
-    getRootDirs();
-    setCategories(nowNode.id);
-}
-
 window.onload = () => {
-    resetRoot();
+    setRoot();
 };

@@ -3,7 +3,6 @@ const IMG_PATH = "https://fe-dev-matching-2021-03-serverlessdeploymentbuck-1ooef
 
 /**
  * fetch api dirs or files by id
- * @author HwaYeon
  * @param {*} nodeId 
  * @returns data
  */
