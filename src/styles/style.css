@@ -7,16 +7,7 @@ body {
   background-color: #eee;
   flex-direction: column;
 }
-main {
-  width: 100vw;
-}
-@media (min-width: 1200px) {
-  main {
-    width: 70vw;
-  }
-}
-
-.app {
+.App {
   border: 1px solid #ccc;
   background-color: #fff;
   border-radius: 5px;

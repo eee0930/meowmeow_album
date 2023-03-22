@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>고양이 사진첩!</title>
+    <title>MeowMeow!</title>
     <link rel="stylesheet" href="./src/styles/style.css">
 </head>
 <body>
+    <!-- ------------------------[Album Container]-------------------------- -->
     <h1>MeowMeow Album</h1>
     <main class="App" data-id="root" >
+        <!-- root -->
         <nav class="Breadcrumb"></nav>
+        <!-- dir -->
         <div class="Nodes"></div>
     </main>
-    <!-- Clone Markup -->
+    <!-- ---------------------------[Clone Markup]-------------------------- -->
     <div class="Node prevBtn" style="display: none;">
         <img src="./assets/prev.png">
     </div>
@@ -25,7 +28,7 @@
         <img src="./assets/file.png">
         <div class="name">하품하는 사진</div>
     </div>
-    <!-- Loading Layer sample markup -->
+    <!-- ---------------------------[Modal Markup]-------------------------- -->
     <div id="imageModal" class="Modal Loading" onclick="closeModal()"
         style="display: none;">
         <div class="content">
@@ -33,9 +36,10 @@
             <img id="dataImg" src="./assets/sample_image.png" style="display: none;">
         </div>
     </div>
-    <div id="loadingModal" class="Modal Loading" style="display: none;">
+    <div id="loadingModal" class="Modal Loading" onclick="closeModal()" 
+        style="display: none;">
         <div class="content">
-            <img id="loadingImg" src="./assets/nyan-cat.gif">
+            <img src="./assets/nyan-cat.gif">
         </div>
     </div>
 
@@ -43,3 +47,7 @@
     <script src="./src/js/app.js"></script>
 </body>
 </html>
+<!--       _
+       .__(.)< (MEOW)
+        \___)   
+ ~~~~~~~~~~~~~~~~~~-->
