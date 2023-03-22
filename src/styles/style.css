@@ -4,11 +4,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #eee;
+  background-color: #ffc968;
   flex-direction: column;
 }
+h1 {
+  text-transform: uppercase;
+  color: #000;
+  text-shadow: 2px 2px 0px #ff4545, -2px -2px 0px #3fe9ff;
+}
 .App {
-  border: 1px solid #ccc;
+  border: 5px solid #000;
   background-color: #fff;
   border-radius: 5px;
   width: 800px;
@@ -24,25 +29,35 @@ body {
 
 .Node {
   width: 140px;
-  min-height: 150px;
+  min-height: 140px;
   padding: 12px;
   margin: 8px;
   text-align: center;
+  font-size: 14px;
   display: flex;
   flex-direction: column;
   word-break: keep-all;
+}
+.Node.prev {
+  width: 100px;
+}
+.Node.prev img {
+  width: 40px;
+  margin: 20px 0;
 }
 
 .Breadcrumb {
   height: 62px;
   padding: 16px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 5px solid #000;
   display: flex;
   flex-direction: row;
 }
 
 .Breadcrumb > div {
   padding: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .Breadcrumb > div::after {
