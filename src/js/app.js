@@ -16,13 +16,21 @@ const NONE = "none";
 let nowNode = {};
 let categories = [];
 
-// div child 요소들 비우기
+/**
+ * ele의 child 요소들 비우기
+ * @param {*} ele 
+ */
 function removeAllEle(ele) {
     while (ele.firstChild) {
         ele.removeChild(ele.firstChild);
     }
 };
 
+// [handle breadcrumb] ---------------------------------------------------------
+/**
+ * index번째에 있는 카테고리 dir로 이동
+ * @param {*} index 
+ */
 function handleClickCategory(index) {
     categories = categories.slice(0, index + 1);
     const nodeId = categories[index].id;
@@ -39,14 +47,22 @@ function handleClickCategory(index) {
     setCategories(nodeId);
 };
 
+/**
+ * 카테고리 markup
+ * @param {*} category 
+ * @param {*} index 
+ */
 function markupCategories(category, index) {
     const div = document.createElement("div");
     div.innerHTML = category.name;
     div.addEventListener("click", () => handleClickCategory(index));
     breadcrumb.appendChild(div);
 }
-
-// 카테고리 세팅   
+ 
+/**
+ * 선택한 nodeId로 카테고리 세팅 
+ * @param {*} nodeId 
+ */  
 function setCategories(nodeId) {
     removeAllEle(breadcrumb);
     if(categories.length < 1) {
@@ -73,7 +89,11 @@ function setCategories(nodeId) {
     });
 }
 
-// 로딩 모달 띄우기
+// [handle modal] --------------------------------------------------------------
+/**
+ * 로딩 모달 띄우기
+ * @param {*} isLoading 
+ */
 function isLoading(isLoading) {
     if(isLoading) {
         loadingModal.style.display = BLOCK;
@@ -82,7 +102,10 @@ function isLoading(isLoading) {
     }
 }
 
-// 이미지 모달 띄우기
+/**
+ * 이미지 모달 띄우기
+ * @param {*} filePath 
+ */
 function openImageViewer(filePath) {
     const loadingImg = imageModal.querySelector("#loadingImg");
     const dataImg = imageModal.querySelector("#dataImg");
@@ -95,7 +118,10 @@ function openImageViewer(filePath) {
         dataImg.style.display = BLOCK;
     }, 500);
 }
-// 모달 닫기
+
+/**
+ * 모달창 닫기
+ */
 function closeModal() {
     const loadingImg = imageModal.querySelector("#loadingImg");
     const dataImg = imageModal.querySelector("#dataImg");
@@ -106,6 +132,10 @@ function closeModal() {
     imageModal.classList.add("Loading");
 }
 
+// [handle dir and files] ------------------------------------------------------
+/**
+ * 이전 dir로 돌아가기
+ */
 function handleClickPrevBtn() {
     categories.pop();
     const nodeId = categories[categories.length - 1].id;
@@ -122,7 +152,9 @@ function handleClickPrevBtn() {
     setCategories(nodeId);
 }
 
-// markup prev btn
+/**
+ * markup prev btn
+ */
 function markupPrevBtn() {
     const prev = prevBtn.cloneNode(true);
     prev.classList.remove("prevBtn");
@@ -131,6 +163,11 @@ function markupPrevBtn() {
     nodes.appendChild(prev);
 }
 
+/**
+ * id, name에 해당하는 dir 클릭 이벤트
+ * @param {*} id 
+ * @param {*} name 
+ */
 function handleClickDir(id, name) {
     nowNode = {
         id,
@@ -139,7 +176,11 @@ function handleClickDir(id, name) {
     getDirOrFilesById();
     setCategories(id);
 }
-// markup file or dir
+
+/**
+ * markup file or dir
+ * @param {*} data 
+ */
 function markupFileOrDir(data) {
     const {id, name, type, filePath} = data;
     let markupDiv = '';
@@ -158,7 +199,12 @@ function markupFileOrDir(data) {
     nodes.appendChild(markupDiv);
 }
 
-// get api fetch items
+/**
+ * get api fetch items by nodeId
+ * @param {*} nodeId 
+ * @param {*} localData 
+ * @returns fetchDatas
+ */
 async function getFetchItems(nodeId, localData) {
     let datas = '';
     if(nodeId) {
@@ -172,7 +218,9 @@ async function getFetchItems(nodeId, localData) {
     return datas;
 }
 
-// root dir 가져오기
+/**
+ * root dir 가져오기
+ */
 async function getRootDirs() {
     removeAllEle(nodes);
     isLoading(true);
@@ -190,7 +238,9 @@ async function getRootDirs() {
     isLoading(false);
 }
 
-// nodeId로 dir or files 가져오기
+/**
+ * dir or files 가져오기
+ */
 async function getDirOrFilesById() {
     removeAllEle(nodes);
     isLoading(true);
