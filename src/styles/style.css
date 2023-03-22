@@ -9,11 +9,11 @@ body {
 }
 h1 {
   text-transform: uppercase;
-  color: #000;
+  color: #232323;
   text-shadow: 2px 2px 0px #ff4545, -2px -2px 0px #3fe9ff;
 }
 .App {
-  border: 4px solid #000;
+  border: 4px solid #232323;
   background-color: #fff;
   border-radius: 5px;
   width: 95vw;
@@ -48,7 +48,7 @@ h1 {
 .Breadcrumb {
   height: 62px;
   padding: 16px;
-  border-bottom: 5px solid #000;
+  border-bottom: 4px solid #232323;
   display: flex;
   flex-direction: row;
 }
@@ -102,6 +102,7 @@ img.error {
 @media (min-width: 768px) {
   .App {
     border-width: 5px;
+    border-radius: 6px;
     width: 85vw;
     height: 600px;
   }
@@ -117,12 +118,17 @@ img.error {
   .Node.prev img {
     width: 40px;
   }
+  .Breadcrumb {
+    border-bottom-width: 5px;
+  }
   .Modal .content {
     max-width: 500px;
   }
 }
 @media (min-width: 1200px) {
   .App {
+    border-width: 6px;
+    border-radius: 8px;
     width: 800px;
     height: 600px;
   }
@@ -133,5 +139,7 @@ img.error {
   .Node.prev {
     width: 100px;
   }
-
+  .Breadcrumb {
+    border-bottom-width: 6px;
+  }
 }
