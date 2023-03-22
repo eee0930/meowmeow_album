@@ -17,19 +17,21 @@ async function fetchDirOrFilesById(nodeId) {
         }
         const data = response.json();
         const status = response.status;
-        console.log(status);
-        if (status !== 200) {
+        if(status !== 200) {
             setTimeout(() => {
                 isLoading(false);
+                handleError();
                 console.log(status, 'API Error가 발생했다냥');
             }, 2000);
-            return;
+            return false;
         } else {
             return data;
         }
     } catch(error) {
         isLoading(false);
+        handleError();
         console.log(error, 'API Error가 발생했다냥');
+        return false;
     }
 }
 

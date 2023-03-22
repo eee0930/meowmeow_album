@@ -62,6 +62,9 @@ body {
   top: 0;
   background-color: rgba(0,0,0,0.3);
 }
+.Modal.ImageViewer {
+  backdrop-filter: blur(12px);
+}
 
 .Modal > div {
   position: fixed;
@@ -76,4 +79,11 @@ body {
 }
 .Modal img {
   width: 100%;
+}
+img.error {
+  height: 400px;
+  margin: 10px auto;
+}
+.jsAction {
+  cursor: pointer;
 }

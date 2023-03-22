@@ -12,6 +12,7 @@ const LOCALDIR = "localDirItems";
 const ROOT = "root";
 const BLOCK = "block";
 const NONE = "none";
+const ACTION = "jsAction";
 
 let nowNode = {};
 let categories = [];
@@ -26,7 +27,19 @@ function removeAllEle(ele) {
     }
 };
 
-// [handle breadcrumb] ---------------------------------------------------------
+/**
+ * error 화면 띄우기
+ */
+function handleError() {
+    removeAllEle(nodes);
+    const errorImg = document.createElement("img");
+    errorImg.src="assets/error_image.jpg";
+    errorImg.className = `error ${ACTION}`;
+    errorImg.addEventListener("click", resetRoot);
+    nodes.appendChild(errorImg);
+}
+
+// [handle Breadcrumb] ---------------------------------------------------------
 /**
  * index번째에 있는 카테고리 dir로 이동
  * @param {*} index 
@@ -55,6 +68,7 @@ function handleClickCategory(index) {
 function markupCategories(category, index) {
     const div = document.createElement("div");
     div.innerHTML = category.name;
+    div.classList.add(ACTION);
     div.addEventListener("click", () => handleClickCategory(index));
     breadcrumb.appendChild(div);
 }
@@ -68,17 +82,8 @@ function setCategories(nodeId) {
     if(categories.length < 1) {
         categories.push(nowNode);
     } else {
-        let isIncluded = false;
-        let index = 0;
-        for(let i = 0; i < categories.length; i++) {
-            const selected = categories[i];
-            if(selected.id === nodeId) {
-                isIncluded = true;
-                index = i;
-                break;
-            }
-        }
-        if(isIncluded) {
+        const index = categories.findIndex((category) => category.id === nodeId);
+        if(index > -1) {
             categories = categories.slice(0, index + 1);
         } else {
             categories.push(nowNode);
@@ -89,7 +94,7 @@ function setCategories(nodeId) {
     });
 }
 
-// [handle modal] --------------------------------------------------------------
+// [handle Modal] --------------------------------------------------------------
 /**
  * 로딩 모달 띄우기
  * @param {*} isLoading 
@@ -132,7 +137,7 @@ function closeModal() {
     imageModal.classList.add("Loading");
 }
 
-// [handle dir and files] ------------------------------------------------------
+// [handle Nodes] --------------------------------------------------------------
 /**
  * 이전 dir로 돌아가기
  */
@@ -158,6 +163,7 @@ function handleClickPrevBtn() {
 function markupPrevBtn() {
     const prev = prevBtn.cloneNode(true);
     prev.classList.remove("prevBtn");
+    prev.classList.add(ACTION);
     prev.style.display = BLOCK;
     prev.addEventListener("click", () => handleClickPrevBtn());
     nodes.appendChild(prev);
@@ -193,6 +199,7 @@ function markupFileOrDir(data) {
         markupDiv.classList.remove("dirEle");
         markupDiv.addEventListener("click", () => handleClickDir(id, name));
     }
+    markupDiv.classList.add(ACTION);
     markupDiv.style.display = BLOCK;
     const dataName = markupDiv.querySelector(".name");
     dataName.innerText = name;
@@ -224,17 +231,18 @@ async function getFetchItems(nodeId, localData) {
 async function getRootDirs() {
     removeAllEle(nodes);
     isLoading(true);
-    app.dataset.id = ROOT;
-    let localRoot = localStorage.getItem(LOCALROOT);
+    const localRoot = localStorage.getItem(LOCALROOT);
     let rootDatas = [];
     if(localRoot) {
         rootDatas = JSON.parse(localRoot);
     } else {
         rootDatas = await getFetchItems();
     }
-    rootDatas.map((rootData) => {
-        markupFileOrDir(rootData);
-    });
+    if(rootDatas !== false) {
+        rootDatas.map((rootData) => {
+            markupFileOrDir(rootData);
+        });
+    }
     isLoading(false);
 }
 
@@ -244,28 +252,33 @@ async function getRootDirs() {
 async function getDirOrFilesById() {
     removeAllEle(nodes);
     isLoading(true);
-    app.dataset.id = `${nowNode.id}`;
-    let localDir = localStorage.getItem(LOCALDIR);
+    const localDir = localStorage.getItem(LOCALDIR);
     let dirDatas = [];
     let parcedLocalDir = {};
     if(localDir) {
         parcedLocalDir = JSON.parse(localDir);
-        if(parcedLocalDir[nowNode.id] !== undefined) {
-            dirDatas = parcedLocalDir[nowNode.id];
-        } else {
+        if(parcedLocalDir[nowNode.id] === undefined 
+            || parcedLocalDir[nowNode.id] === false) {
             dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
+        } else {
+            dirDatas = parcedLocalDir[nowNode.id];
         }
     } else {
         dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
     }
-    markupPrevBtn();
-    dirDatas.map((dirData) => {
-        markupFileOrDir(dirData);
-    });
+    if(dirDatas !== false) {
+        markupPrevBtn();
+        dirDatas.map((dirData) => {
+            markupFileOrDir(dirData);
+        });
+    }
     isLoading(false);
 }
 
-if(app.dataset.id === ROOT) {
+/**
+ * 화면 진입 시 setting
+ */
+function resetRoot() {
     nowNode = {
         id: -1,
         name: ROOT,
@@ -273,3 +286,7 @@ if(app.dataset.id === ROOT) {
     getRootDirs();
     setCategories(nowNode.id);
 }
+
+window.onload = () => {
+    resetRoot();
+};
