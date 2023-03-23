@@ -248,10 +248,13 @@ async function getRootDirs() {
     isLoading(true);
     const localRoot = localStorage.getItem(LOCALROOT);
     let rootDatas = [];
-    if(!localRoot || localRoot === false) {
-        rootDatas = await setFetchItems();
-    } else {
+    if(localRoot) {
         rootDatas = JSON.parse(localRoot);
+        if(rootDatas === false) {
+            rootDatas = await setFetchItems();
+        }
+    } else {
+        rootDatas = await setFetchItems();
     }
     if(rootDatas !== false) {
         rootDatas.map((rootData) => {
