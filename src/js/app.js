@@ -45,7 +45,7 @@ function removeChildrenByEle(ele) {
  * error 화면 setting
  */
 function handleError() {
-    removeAllEle(nodes);
+    removeChildrenByEle(nodes);
     const errorImg = document.createElement("img");
     errorImg.src = "assets/error_image.jpg";
     errorImg.className = `error ${ACTION}`;
@@ -248,10 +248,10 @@ async function getRootDirs() {
     isLoading(true);
     const localRoot = localStorage.getItem(LOCALROOT);
     let rootDatas = [];
-    if(localRoot) {
-        rootDatas = JSON.parse(localRoot);
-    } else {
+    if(!localRoot || localRoot === false) {
         rootDatas = await setFetchItems();
+    } else {
+        rootDatas = JSON.parse(localRoot);
     }
     if(rootDatas !== false) {
         rootDatas.map((rootData) => {
