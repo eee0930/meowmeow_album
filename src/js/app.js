@@ -45,11 +45,11 @@ function removeChildrenByEle(ele) {
  */
 function handleError() {
     removeChildrenByEle($nodes);
-    const errorImg = document.createElement("img");
-    errorImg.src = "assets/error_image.jpg";
-    errorImg.className = `error ${ACTION}`;
-    errorImg.addEventListener("click", setRoot);
-    $nodes.appendChild(errorImg);
+    const $errorImg = document.createElement("img");
+    $errorImg.src = "assets/error_image.jpg";
+    $errorImg.className = `error ${ACTION}`;
+    $errorImg.addEventListener("click", setRoot);
+    $nodes.appendChild($errorImg);
 }
 
 // [handle Breadcrumb] ---------------------------------------------------------
@@ -76,11 +76,11 @@ function handleClickCategory(index) {
  * @param {*} index 
  */
 function markupCategories(category, index) {
-    const div = document.createElement("div");
-    div.innerHTML = category.name;
-    div.classList.add(ACTION);
-    div.addEventListener("click", () => handleClickCategory(index));
-    $breadcrumb.appendChild(div);
+    const $div = document.createElement("div");
+    $div.innerHTML = category.name;
+    $div.classList.add(ACTION);
+    $div.addEventListener("click", () => handleClickCategory(index));
+    $breadcrumb.appendChild($div);
 }
  
 /**
@@ -105,8 +105,8 @@ function setCategories(nodeId) {
 }
 
 // [handle Modal] --------------------------------------------------------------
-const loadingImg = $imageModal.querySelector("#loadingImg");
-const dataImg = $imageModal.querySelector("#dataImg");
+const $loadingImg = $imageModal.querySelector("#loadingImg");
+const $dataImg = $imageModal.querySelector("#dataImg");
 
 /**
  * 로딩 모달 띄우기
@@ -125,13 +125,13 @@ function isLoading(isLoading) {
  * @param {*} filePath 
  */
 function openImageViewer(filePath) {
-    dataImg.src = fetchImageFile(filePath);
+    $dataImg.src = fetchImageFile(filePath);
     $imageModal.style.display = BLOCK;
     setTimeout(function() {
         $imageModal.classList.remove(LOADING);
         $imageModal.classList.add(IMG_VIEWER);
-        loadingImg.style.display = NONE;
-        dataImg.style.display = BLOCK;
+        $loadingImg.style.display = NONE;
+        $dataImg.style.display = BLOCK;
     }, 500);
 }
 
@@ -139,8 +139,8 @@ function openImageViewer(filePath) {
  * 모달창 닫기
  */
 function closeModal() {
-    loadingImg.style.display = BLOCK;
-    dataImg.style.display = NONE;
+    $loadingImg.style.display = BLOCK;
+    $dataImg.style.display = NONE;
     $imageModal.style.display = NONE;
     $imageModal.classList.remove(IMG_VIEWER);
     $imageModal.classList.add(LOADING);
@@ -215,8 +215,8 @@ function markupFileOrDir(data) {
     }
     markupDiv.classList.add(ACTION);
     markupDiv.style.display = BLOCK;
-    const dataName = markupDiv.querySelector(".name");
-    dataName.innerText = name;
+    const $dataName = markupDiv.querySelector(".name");
+    $dataName.innerText = name;
     $nodes.appendChild(markupDiv);
 }
 
