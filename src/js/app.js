@@ -1,11 +1,10 @@
-const app = document.querySelector(".App");
-const breadcrumb = document.querySelector(".Breadcrumb"); 
-const nodes = document.querySelector(".Nodes");
-const prevBtn = document.querySelector(".prevBtn");
-const dirEle = document.querySelector(".dirEle");
-const fileEle = document.querySelector(".fileEle");
-const imageModal = document.querySelector("#imageModal");
-const loadingModal = document.querySelector("#loadingModal"); 
+const $breadcrumb = document.querySelector(".Breadcrumb"); 
+const $nodes = document.querySelector(".Nodes");
+const $prevBtn = document.querySelector(".prevBtn");
+const $dirEle = document.querySelector(".dirEle");
+const $fileEle = document.querySelector(".fileEle");
+const $imageModal = document.querySelector("#imageModal");
+const $loadingModal = document.querySelector("#loadingModal"); 
 
 const LOCALROOT = "localRootItems";
 const LOCALDIR = "localDirItems";
@@ -45,12 +44,12 @@ function removeChildrenByEle(ele) {
  * error 화면 setting
  */
 function handleError() {
-    removeChildrenByEle(nodes);
+    removeChildrenByEle($nodes);
     const errorImg = document.createElement("img");
     errorImg.src = "assets/error_image.jpg";
     errorImg.className = `error ${ACTION}`;
     errorImg.addEventListener("click", setRoot);
-    nodes.appendChild(errorImg);
+    $nodes.appendChild(errorImg);
 }
 
 // [handle Breadcrumb] ---------------------------------------------------------
@@ -81,7 +80,7 @@ function markupCategories(category, index) {
     div.innerHTML = category.name;
     div.classList.add(ACTION);
     div.addEventListener("click", () => handleClickCategory(index));
-    breadcrumb.appendChild(div);
+    $breadcrumb.appendChild(div);
 }
  
 /**
@@ -89,7 +88,7 @@ function markupCategories(category, index) {
  * @param {*} nodeId 
  */  
 function setCategories(nodeId) {
-    removeChildrenByEle(breadcrumb);
+    removeChildrenByEle($breadcrumb);
     if(categories.length < 1) {
         categories.push(nowNode);
     } else {
@@ -106,8 +105,8 @@ function setCategories(nodeId) {
 }
 
 // [handle Modal] --------------------------------------------------------------
-const loadingImg = imageModal.querySelector("#loadingImg");
-const dataImg = imageModal.querySelector("#dataImg");
+const loadingImg = $imageModal.querySelector("#loadingImg");
+const dataImg = $imageModal.querySelector("#dataImg");
 
 /**
  * 로딩 모달 띄우기
@@ -115,9 +114,9 @@ const dataImg = imageModal.querySelector("#dataImg");
  */
 function isLoading(isLoading) {
     if(isLoading) {
-        loadingModal.style.display = BLOCK;
+        $loadingModal.style.display = BLOCK;
     } else {
-        loadingModal.style.display = NONE;
+        $loadingModal.style.display = NONE;
     }
 }
 
@@ -127,10 +126,10 @@ function isLoading(isLoading) {
  */
 function openImageViewer(filePath) {
     dataImg.src = fetchImageFile(filePath);
-    imageModal.style.display = BLOCK;
+    $imageModal.style.display = BLOCK;
     setTimeout(function() {
-        imageModal.classList.remove(LOADING);
-        imageModal.classList.add(IMG_VIEWER);
+        $imageModal.classList.remove(LOADING);
+        $imageModal.classList.add(IMG_VIEWER);
         loadingImg.style.display = NONE;
         dataImg.style.display = BLOCK;
     }, 500);
@@ -142,9 +141,9 @@ function openImageViewer(filePath) {
 function closeModal() {
     loadingImg.style.display = BLOCK;
     dataImg.style.display = NONE;
-    imageModal.style.display = NONE;
-    imageModal.classList.remove(IMG_VIEWER);
-    imageModal.classList.add(LOADING);
+    $imageModal.style.display = NONE;
+    $imageModal.classList.remove(IMG_VIEWER);
+    $imageModal.classList.add(LOADING);
 }
 
 // [handle Nodes] --------------------------------------------------------------
@@ -169,12 +168,12 @@ function handleClickPrevBtn() {
  * markup prev btn
  */
 function markupPrevBtn() {
-    const prev = prevBtn.cloneNode(true);
+    const prev = $prevBtn.cloneNode(true);
     prev.classList.remove("prevBtn");
     prev.classList.add(ACTION);
     prev.style.display = BLOCK;
     prev.addEventListener("click", () => handleClickPrevBtn());
-    nodes.appendChild(prev);
+    $nodes.appendChild(prev);
 }
 
 /**
@@ -206,11 +205,11 @@ function markupFileOrDir(data) {
     const {id, name, type, filePath} = data;
     let markupDiv = '';
     if(type === 'FILE') {
-        markupDiv = fileEle.cloneNode(true);
+        markupDiv = $fileEle.cloneNode(true);
         markupDiv.classList.remove("fileEle");
         markupDiv.addEventListener("click", () => openImageViewer(filePath));
     } else {
-        markupDiv = dirEle.cloneNode(true);
+        markupDiv = $dirEle.cloneNode(true);
         markupDiv.classList.remove("dirEle");
         markupDiv.addEventListener("click", () => handleClickDir(id, name));
     }
@@ -218,7 +217,7 @@ function markupFileOrDir(data) {
     markupDiv.style.display = BLOCK;
     const dataName = markupDiv.querySelector(".name");
     dataName.innerText = name;
-    nodes.appendChild(markupDiv);
+    $nodes.appendChild(markupDiv);
 }
 
 /**
@@ -244,7 +243,7 @@ async function setFetchItems(nodeId, localData) {
  * root dir 가져오기
  */
 async function getRootDirs() {
-    removeChildrenByEle(nodes);
+    removeChildrenByEle($nodes);
     isLoading(true);
     const localRoot = localStorage.getItem(LOCALROOT);
     let rootDatas = [];
@@ -268,7 +267,7 @@ async function getRootDirs() {
  * dir or files 가져오기
  */
 async function getDirOrFilesById() {
-    removeChildrenByEle(nodes);
+    removeChildrenByEle($nodes);
     isLoading(true);
     const localDir = localStorage.getItem(LOCALDIR);
     let dirDatas = [];
