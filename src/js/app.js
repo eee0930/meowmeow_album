@@ -24,10 +24,10 @@ let categories = [];
  * @param {*} name 
  */
 function setNowNode(id, name) {
-    nowNode = {
-        id,
-        name,
-    };
+  nowNode = {
+    id,
+    name,
+  };
 }
 
 /**
@@ -35,21 +35,22 @@ function setNowNode(id, name) {
  * @param {*} ele 
  */
 function removeChildrenByEle(ele) {
-    while (ele.firstChild) {
-        ele.removeChild(ele.firstChild);
-    }
+  while (ele.firstChild) {
+    ele.removeChild(ele.firstChild);
+  }
 };
 
 /**
  * error 화면 setting
  */
 function handleError() {
-    removeChildrenByEle($nodes);
-    const $errorImg = document.createElement("img");
-    $errorImg.src = "assets/error_image.jpg";
-    $errorImg.className = `error ${ACTION}`;
-    $errorImg.addEventListener("click", setRoot);
-    $nodes.appendChild($errorImg);
+  isLoading(false);
+  removeChildrenByEle($nodes);
+  const $errorImg = document.createElement("img");
+  $errorImg.src = "assets/error_image.jpg";
+  $errorImg.className = `error ${ACTION}`;
+  $errorImg.addEventListener("click", setRoot);
+  $nodes.appendChild($errorImg);
 }
 
 // [handle Breadcrumb] ---------------------------------------------------------
@@ -58,16 +59,16 @@ function handleError() {
  * @param {*} index 
  */
 function handleClickCategory(index) {
-    categories = categories.slice(0, index + 1);
-    const nodeId = categories[index].id;
-    const nodeName = categories[index].name;
-    setNowNode(nodeId, nodeName);
-    if(nodeId === -1) {
-        getRootDirs();
-    } else {
-        getDirOrFilesById();
-    }
-    setCategories(nodeId);
+  categories = categories.slice(0, index + 1);
+  const nodeId = categories[index].id;
+  const nodeName = categories[index].name;
+  setNowNode(nodeId, nodeName);
+  if(nodeId === -1) {
+    getRootDirs();
+  } else {
+    getDirOrFilesById();
+  }
+  setCategories(nodeId);
 };
 
 /**
@@ -76,11 +77,11 @@ function handleClickCategory(index) {
  * @param {*} index 
  */
 function markupCategories(category, index) {
-    const $div = document.createElement("div");
-    $div.innerHTML = category.name;
-    $div.classList.add(ACTION);
-    $div.addEventListener("click", () => handleClickCategory(index));
-    $breadcrumb.appendChild($div);
+  const $div = document.createElement("div");
+  $div.innerHTML = category.name;
+  $div.classList.add(ACTION);
+  $div.addEventListener("click", () => handleClickCategory(index));
+  $breadcrumb.appendChild($div);
 }
  
 /**
@@ -88,20 +89,20 @@ function markupCategories(category, index) {
  * @param {*} nodeId 
  */  
 function setCategories(nodeId) {
-    removeChildrenByEle($breadcrumb);
-    if(categories.length < 1) {
-        categories.push(nowNode);
+  removeChildrenByEle($breadcrumb);
+  if(categories.length < 1) {
+    categories.push(nowNode);
+  } else {
+    const index = categories.findIndex((category) => category.id === nodeId);
+    if(index > -1) {
+      categories = categories.slice(0, index + 1);
     } else {
-        const index = categories.findIndex((category) => category.id === nodeId);
-        if(index > -1) {
-            categories = categories.slice(0, index + 1);
-        } else {
-            categories.push(nowNode);
-        }
+      categories.push(nowNode);
     }
-    categories.map((category, i) => {
-        markupCategories(category, i);
-    });
+  }
+  categories.map((category, i) => {
+    markupCategories(category, i);
+  });
 }
 
 // [handle Modal] --------------------------------------------------------------
@@ -113,11 +114,11 @@ const $dataImg = $imageModal.querySelector("#dataImg");
  * @param {*} isLoading 
  */
 function isLoading(isLoading) {
-    if(isLoading) {
-        $loadingModal.style.display = BLOCK;
-    } else {
-        $loadingModal.style.display = NONE;
-    }
+  if(isLoading) {
+    $loadingModal.style.display = BLOCK;
+  } else {
+    $loadingModal.style.display = NONE;
+  }
 }
 
 /**
@@ -125,25 +126,25 @@ function isLoading(isLoading) {
  * @param {*} filePath 
  */
 function openImageViewer(filePath) {
-    $dataImg.src = fetchImageFile(filePath);
-    $imageModal.style.display = BLOCK;
-    setTimeout(function() {
-        $imageModal.classList.remove(LOADING);
-        $imageModal.classList.add(IMG_VIEWER);
-        $loadingImg.style.display = NONE;
-        $dataImg.style.display = BLOCK;
-    }, 500);
+  $dataImg.src = fetchImageFile(filePath);
+  $imageModal.style.display = BLOCK;
+  setTimeout(function() {
+    $imageModal.classList.remove(LOADING);
+    $imageModal.classList.add(IMG_VIEWER);
+    $loadingImg.style.display = NONE;
+    $dataImg.style.display = BLOCK;
+  }, 500);
 }
 
 /**
  * 모달창 닫기
  */
 function closeModal() {
-    $loadingImg.style.display = BLOCK;
-    $dataImg.style.display = NONE;
-    $imageModal.style.display = NONE;
-    $imageModal.classList.remove(IMG_VIEWER);
-    $imageModal.classList.add(LOADING);
+  $loadingImg.style.display = BLOCK;
+  $dataImg.style.display = NONE;
+  $imageModal.style.display = NONE;
+  $imageModal.classList.remove(IMG_VIEWER);
+  $imageModal.classList.add(LOADING);
 }
 
 // [handle Nodes] --------------------------------------------------------------
@@ -151,39 +152,39 @@ function closeModal() {
  * 이전 dir로 돌아가기
  */
 function handleClickPrevBtn() {
-    categories.pop();
-    const nodeCategory = categories[categories.length - 1];
-    const nodeId = nodeCategory.id;
-    const nodeName = nodeCategory.name;
-    setNowNode(nodeId, nodeName);
-    if(nodeId === -1) {
-        getRootDirs();
-    } else {
-        getDirOrFilesById();
-    }
-    setCategories(nodeId);
+  categories.pop();
+  const nodeCategory = categories[categories.length - 1];
+  const nodeId = nodeCategory.id;
+  const nodeName = nodeCategory.name;
+  setNowNode(nodeId, nodeName);
+  if(nodeId === -1) {
+    getRootDirs();
+  } else {
+    getDirOrFilesById();
+  }
+  setCategories(nodeId);
 }
 
 /**
  * markup prev btn
  */
 function markupPrevBtn() {
-    const prev = $prevBtn.cloneNode(true);
-    prev.classList.remove("prevBtn");
-    prev.classList.add(ACTION);
-    prev.style.display = BLOCK;
-    prev.addEventListener("click", () => handleClickPrevBtn());
-    $nodes.appendChild(prev);
+  const prev = $prevBtn.cloneNode(true);
+  prev.classList.remove("prevBtn");
+  prev.classList.add(ACTION);
+  prev.style.display = BLOCK;
+  prev.addEventListener("click", () => handleClickPrevBtn());
+  $nodes.appendChild(prev);
 }
 
 /**
  * root dir setting
  */
 function setRoot() {
-    const nodeId = -1;
-    setNowNode(nodeId, ROOT);
-    getRootDirs();
-    setCategories(nodeId);
+  const nodeId = -1;
+  setNowNode(nodeId, ROOT);
+  getRootDirs();
+  setCategories(nodeId);
 }
 
 /**
@@ -192,9 +193,9 @@ function setRoot() {
  * @param {*} nodeName 
  */
 function handleClickDir(nodeId, nodeName) {
-    setNowNode(nodeId, nodeName);
-    getDirOrFilesById();
-    setCategories(nodeId);
+  setNowNode(nodeId, nodeName);
+  getDirOrFilesById();
+  setCategories(nodeId);
 }
 
 /**
@@ -202,22 +203,22 @@ function handleClickDir(nodeId, nodeName) {
  * @param {*} data 
  */
 function markupFileOrDir(data) {
-    const {id, name, type, filePath} = data;
-    let markupDiv = '';
-    if(type === 'FILE') {
-        markupDiv = $fileEle.cloneNode(true);
-        markupDiv.classList.remove("fileEle");
-        markupDiv.addEventListener("click", () => openImageViewer(filePath));
-    } else {
-        markupDiv = $dirEle.cloneNode(true);
-        markupDiv.classList.remove("dirEle");
-        markupDiv.addEventListener("click", () => handleClickDir(id, name));
-    }
-    markupDiv.classList.add(ACTION);
-    markupDiv.style.display = BLOCK;
-    const $dataName = markupDiv.querySelector(".name");
-    $dataName.innerText = name;
-    $nodes.appendChild(markupDiv);
+  const {id, name, type, filePath} = data;
+  let markupDiv = '';
+  if(type === 'FILE') {
+    markupDiv = $fileEle.cloneNode(true);
+    markupDiv.classList.remove("fileEle");
+    markupDiv.addEventListener("click", () => openImageViewer(filePath));
+  } else {
+    markupDiv = $dirEle.cloneNode(true);
+    markupDiv.classList.remove("dirEle");
+    markupDiv.addEventListener("click", () => handleClickDir(id, name));
+  }
+  markupDiv.classList.add(ACTION);
+  markupDiv.style.display = BLOCK;
+  const $dataName = markupDiv.querySelector(".name");
+  $dataName.innerText = name;
+  $nodes.appendChild(markupDiv);
 }
 
 /**
@@ -227,71 +228,79 @@ function markupFileOrDir(data) {
  * @returns fetchDatas
  */
 async function setFetchItems(nodeId, localData) {
-    let datas = [];
-    if(nodeId) {
-        datas = await fetchDirOrFilesById(nodeId);
-        localData[nodeId] = datas;
-        localStorage.setItem(LOCALDIR, JSON.stringify(localData));
+  let datas;
+  if(nodeId) {
+    datas = await fetchDirOrFilesById(nodeId);
+    if(datas === false) {
+      handleError();
     } else {
-        datas = await fetchDirOrFilesById();
-        localStorage.setItem(LOCALROOT, JSON.stringify(datas));
+      localData[nodeId] = datas;
+      localStorage.setItem(LOCALDIR, JSON.stringify(localData));
     }
-    return datas;
+  } else {
+    datas = await fetchDirOrFilesById();
+    if(datas === false) {
+      handleError();
+    } else {
+      localStorage.setItem(LOCALROOT, JSON.stringify(datas));
+    } 
+  }
+  return datas;
 }
 
 /**
  * root dir 가져오기
  */
 async function getRootDirs() {
-    removeChildrenByEle($nodes);
-    isLoading(true);
-    const localRoot = localStorage.getItem(LOCALROOT);
-    let rootDatas = [];
-    if(localRoot) {
-        rootDatas = JSON.parse(localRoot);
-        if(rootDatas === false) {
-            rootDatas = await setFetchItems();
-        }
-    } else {
-        rootDatas = await setFetchItems();
+  removeChildrenByEle($nodes);
+  isLoading(true);
+  const localRoot = localStorage.getItem(LOCALROOT);
+  let rootDatas = [];
+  if(localRoot) {
+    rootDatas = JSON.parse(localRoot);
+    if(rootDatas === false) {
+      rootDatas = await setFetchItems();
     }
-    if(rootDatas !== false) {
-        rootDatas.map((rootData) => {
-            markupFileOrDir(rootData);
-        });
-    }
-    isLoading(false);
+  } else {
+    rootDatas = await setFetchItems();
+  }
+  if(rootDatas !== false) {
+    rootDatas.map((rootData) => {
+      markupFileOrDir(rootData);
+    });
+  }
+  isLoading(false);
 }
 
 /**
  * dir or files 가져오기
  */
 async function getDirOrFilesById() {
-    removeChildrenByEle($nodes);
-    isLoading(true);
-    const localDir = localStorage.getItem(LOCALDIR);
-    let dirDatas = [];
-    let parcedLocalDir = {};
-    if(localDir) {
-        parcedLocalDir = JSON.parse(localDir);
-        if(parcedLocalDir[nowNode.id] === undefined 
-            || parcedLocalDir[nowNode.id] === false) {
-            dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
-        } else {
-            dirDatas = parcedLocalDir[nowNode.id];
-        }
+  removeChildrenByEle($nodes);
+  isLoading(true);
+  const localDir = localStorage.getItem(LOCALDIR);
+  let dirDatas = [];
+  let parcedLocalDir = {};
+  if(localDir) {
+    parcedLocalDir = JSON.parse(localDir);
+    if(parcedLocalDir[nowNode.id] === undefined 
+      || parcedLocalDir[nowNode.id] === false) {
+      dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
     } else {
-        dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
+      dirDatas = parcedLocalDir[nowNode.id];
     }
-    if(dirDatas !== false) {
-        markupPrevBtn();
-        dirDatas.map((dirData) => {
-            markupFileOrDir(dirData);
-        });
-    }
-    isLoading(false);
+  } else {
+    dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
+  }
+  if(dirDatas !== false) {
+    markupPrevBtn();
+    dirDatas.map((dirData) => {
+      markupFileOrDir(dirData);
+    });
+  }
+  isLoading(false);
 }
 
 window.onload = () => {
-    setRoot();
+  setRoot();
 };
