@@ -62,9 +62,9 @@ function handleClickCategory(index) {
   const nodeName = categories[index].name;
   setNowNode(nodeId, nodeName);
   if(nodeId === -1) {
-    getRootDirs();
+    setRootDirs();
   } else {
-    getDirOrFilesById();
+    setDirOrFiles();
   }
   setCategories(nodeId);
 };
@@ -145,9 +145,9 @@ function handleClickPrevBtn() {
   const nodeName = nodeCategory.name;
   setNowNode(nodeId, nodeName);
   if(nodeId === -1) {
-    getRootDirs();
+    setRootDirs();
   } else {
-    getDirOrFilesById();
+    setDirOrFiles();
   }
   setCategories(nodeId);
 }
@@ -165,12 +165,12 @@ function markupPrevBtn() {
 }
 
 /**
- * root dir setting
+ * 초기 data 세팅
  */
 function setRoot() {
   const nodeId = -1;
   setNowNode(nodeId, ROOT);
-  getRootDirs();
+  setRootDirs();
   setCategories(nodeId);
 }
 
@@ -181,7 +181,7 @@ function setRoot() {
  */
 function handleClickDir(nodeId, nodeName) {
   setNowNode(nodeId, nodeName);
-  getDirOrFilesById();
+  setDirOrFiles();
   setCategories(nodeId);
 }
 
@@ -209,26 +209,22 @@ function markupFileOrDir(data) {
 }
 
 /**
- * api fetch로 가져온 data들 setting하기
+ * api fetch로 가져온 data들 가져오기
  * @param {*} nodeId 
  * @param {*} localData 
  * @returns fetchDatas
  */
-async function setFetchItems(nodeId, localData) {
+async function getFetchItems(nodeId, localData) {
   let datas;
   if(nodeId) {
     datas = await fetchDirOrFilesById(nodeId);
-    if(datas === false) {
-      handleError();
-    } else {
+    if(datas) {
       localData[nodeId] = datas;
       localStorage.setItem(LOCALDIR, JSON.stringify(localData));
     }
   } else {
     datas = await fetchDirOrFilesById();
-    if(datas === false) {
-      handleError();
-    } else {
+    if(datas) {
       localStorage.setItem(LOCALROOT, JSON.stringify(datas));
     } 
   }
@@ -236,20 +232,20 @@ async function setFetchItems(nodeId, localData) {
 }
 
 /**
- * root dir 가져오기
+ * root dir 세팅
  */
-async function getRootDirs() {
+async function setRootDirs() {
   removeChildrenByEle($nodes);
   isLoading(true);
   const localRoot = localStorage.getItem(LOCALROOT);
   let rootDatas = [];
   if(localRoot) {
     rootDatas = JSON.parse(localRoot);
-    if(rootDatas === false) {
-      rootDatas = await setFetchItems();
+    if(rootDatas === null || rootDatas === undefined) {
+      rootDatas = await getFetchItems();
     }
   } else {
-    rootDatas = await setFetchItems();
+    rootDatas = await getFetchItems();
   }
   if(rootDatas !== false) {
     rootDatas.map((rootData) => {
@@ -260,9 +256,9 @@ async function getRootDirs() {
 }
 
 /**
- * dir or files 가져오기
+ * dir or files 세팅
  */
-async function getDirOrFilesById() {
+async function setDirOrFiles() {
   removeChildrenByEle($nodes);
   isLoading(true);
   const localDir = localStorage.getItem(LOCALDIR);
@@ -272,12 +268,12 @@ async function getDirOrFilesById() {
     parcedLocalDir = JSON.parse(localDir);
     if(parcedLocalDir[nowNode.id] === undefined 
       || parcedLocalDir[nowNode.id] === false) {
-      dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
+      dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
     } else {
       dirDatas = parcedLocalDir[nowNode.id];
     }
   } else {
-    dirDatas = await setFetchItems(nowNode.id, parcedLocalDir);
+    dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
   }
   if(dirDatas !== false) {
     markupPrevBtn();

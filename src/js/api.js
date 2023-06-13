@@ -15,16 +15,11 @@ async function fetchDirOrFilesById(nodeId) {
       response = await fetch(FETCH_URL);
     }
     const data = response.json();
-    const status = response.status;
-    if(status !== 200) {
-      console.log(status, 'API Error가 발생했다냥');
-      return false;
-    } else {
-      return data;
-    }
+    return data;
   } catch(error) {
     console.log(error, 'API Error가 발생했다냥');
-    return false;
+    handleError();
+    return;
   }
 }
 
