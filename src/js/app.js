@@ -188,7 +188,7 @@ function setRoot() {
 }
 
 /**
- * nodeId, nodeName에 해당하는 dir setting
+ * nodeId, nodeName에 해당하는 dir 클릭 이벤트 컨트롤
  * @param {*} nodeId 
  * @param {*} nodeName 
  */
