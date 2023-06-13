@@ -11,8 +11,6 @@ const LOCALDIR = "localDirItems";
 const ROOT = "root";
 const BLOCK = "block";
 const NONE = "none";
-const LOADING = "Loading";
-const IMG_VIEWER = "ImageViewer";
 const ACTION = "jsAction";
 
 let nowNode = {};
@@ -106,8 +104,7 @@ function setCategories(nodeId) {
 }
 
 // [handle Modal] --------------------------------------------------------------
-const $loadingImg = $imageModal.querySelector("#loadingImg");
-const $dataImg = $imageModal.querySelector("#dataImg");
+const $dataImg = $imageModal.querySelector("img");
 
 /**
  * 로딩 모달 띄우기
@@ -128,23 +125,13 @@ function isLoading(isLoading) {
 function openImageViewer(filePath) {
   $dataImg.src = fetchImageFile(filePath);
   $imageModal.style.display = BLOCK;
-  setTimeout(function() {
-    $imageModal.classList.remove(LOADING);
-    $imageModal.classList.add(IMG_VIEWER);
-    $loadingImg.style.display = NONE;
-    $dataImg.style.display = BLOCK;
-  }, 500);
 }
 
 /**
  * 모달창 닫기
  */
 function closeModal() {
-  $loadingImg.style.display = BLOCK;
-  $dataImg.style.display = NONE;
   $imageModal.style.display = NONE;
-  $imageModal.classList.remove(IMG_VIEWER);
-  $imageModal.classList.add(LOADING);
 }
 
 // [handle Nodes] --------------------------------------------------------------
@@ -188,7 +175,7 @@ function setRoot() {
 }
 
 /**
- * nodeId, nodeName에 해당하는 dir 클릭 이벤트 컨트롤
+ * nodeId, nodeName에 해당하는 dir 열기
  * @param {*} nodeId 
  * @param {*} nodeName 
  */
