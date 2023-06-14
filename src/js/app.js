@@ -39,16 +39,23 @@ function removeChildrenByEle(ele) {
 };
 
 /**
- * error 화면 setting
+ * error 화면 표시
  */
-function handleError() {
-  isLoading(false);
-  removeChildrenByEle($nodes);
+function markupError() {
   const $errorImg = document.createElement("img");
   $errorImg.src = "assets/error_image.jpg";
   $errorImg.className = `error ${ACTION}`;
   $errorImg.addEventListener("click", setRoot);
   $nodes.appendChild($errorImg);
+}
+
+/**
+ * error 화면 setting
+ */
+function setError() {
+  isLoading(false);
+  removeChildrenByEle($nodes);
+  markupError();
 }
 
 // [handle Breadcrumb] ---------------------------------------------------------
@@ -70,7 +77,7 @@ function handleClickCategory(index) {
 };
 
 /**
- * 카테고리 markup
+ * 카테고리 표시
  * @param {*} category 
  * @param {*} index 
  */
@@ -153,7 +160,7 @@ function handleClickPrevBtn() {
 }
 
 /**
- * markup prev btn
+ * prev btn 화면에 표시
  */
 function markupPrevBtn() {
   const prev = $prevBtn.cloneNode(true);
@@ -186,7 +193,7 @@ function handleClickDir(nodeId, nodeName) {
 }
 
 /**
- * markup file or dir
+ * file or dir 화면에 표시
  * @param {*} data 
  */
 function markupFileOrDir(data) {
@@ -247,7 +254,7 @@ async function setRootDirs() {
   } else {
     rootDatas = await getFetchItems();
   }
-  if(rootDatas !== false) {
+  if(rootDatas !== null && rootDatas !== undefined) {
     rootDatas.map((rootData) => {
       markupFileOrDir(rootData);
     });
@@ -267,7 +274,7 @@ async function setDirOrFiles() {
   if(localDir) {
     parcedLocalDir = JSON.parse(localDir);
     if(parcedLocalDir[nowNode.id] === undefined 
-      || parcedLocalDir[nowNode.id] === false) {
+      || parcedLocalDir[nowNode.id] === null) {
       dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
     } else {
       dirDatas = parcedLocalDir[nowNode.id];
@@ -275,7 +282,7 @@ async function setDirOrFiles() {
   } else {
     dirDatas = await getFetchItems(nowNode.id, parcedLocalDir);
   }
-  if(dirDatas !== false) {
+  if(dirDatas !== null && dirDatas !== undefined) {
     markupPrevBtn();
     dirDatas.map((dirData) => {
       markupFileOrDir(dirData);

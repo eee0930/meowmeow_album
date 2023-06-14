@@ -18,7 +18,7 @@ async function fetchDirOrFilesById(nodeId) {
     return data;
   } catch(error) {
     console.log(error, 'API Error가 발생했다냥');
-    handleError();
+    setError();
     return;
   }
 }
