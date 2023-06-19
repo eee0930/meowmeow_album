@@ -5,7 +5,8 @@ class Error {
   /**
    * error 화면 표시
    */
-  renderError = () => {
+  render = () => {
+    this.setError();
     const $errorImg = document.createElement("img");
     $errorImg.src = "./assets/img/error_image.jpg";
     $errorImg.className = "error jsAction";
@@ -17,7 +18,6 @@ class Error {
    */
   setError = () => {
     this.removeChildren(this.$target);
-    this.renderError();
   }
 
   /**
