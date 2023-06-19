@@ -1,50 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeowMeow!</title>
-    <link rel="icon" href="./assets/favicon.ico" />
-    <link rel="stylesheet" href="./src/styles/style.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeowMeow Album</title>
+  <link rel="icon" href="./assets/favicon.ico">
+  <link rel="stylesheet" href="./assets/style/style.css" />
 </head>
 <body>
-    <!-- ------------------------[Album Container]-------------------------- -->
-    <h1>MeowMeow Album</h1>
-    <main class="App">
-        <!-- root -->
-        <nav class="Breadcrumb"></nav>
-        <!-- dir -->
-        <div class="Nodes"></div>
-    </main>
-    <!-- ---------------------------[Clone Markup]-------------------------- -->
-    <div class="Node prevBtn prev" style="display: none;">
-        <img src="./assets/prev.png">
-    </div>
-    <div class="Node dirEle" style="display: none;">
-        <img src="./assets/directory.png">
-        <div class="name">2021/04</div>
-    </div>
-    <div class="Node fileEle" style="display: none;">
-        <img src="./assets/file.png">
-        <div class="name">하품하는 사진</div>
-    </div>
-    <!-- ---------------------------[Modal Markup]-------------------------- -->
-    <div id="imageModal" class="Modal ImageViewer" onclick="closeModal()"
-        style="display: none;">
-        <div class="content">
-            <img src="./assets/sample_image.png">
-        </div>
-    </div>
-    <div id="loadingModal" class="Modal Loading" onclick="closeModal()" 
-        style="display: none;">
-        <div class="content">
-            <img src="./assets/nyan-cat.gif">
-        </div>
-    </div>
+  <h1>MeowMeow Album</h1>
+  <main id="root"></main>
 
-    <script src="./src/js/api.js"></script>
-    <script src="./src/js/app.js"></script>
+  <script type="module" src="./src/index.js"></script>
 </body>
 </html>
 <!--       _

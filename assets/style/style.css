@@ -36,6 +36,12 @@ h1 {
   display: flex;
   flex-direction: column;
   word-break: keep-all;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Node img {
+  width: 64px;
 }
 .Node.prev {
   width: 60px;
